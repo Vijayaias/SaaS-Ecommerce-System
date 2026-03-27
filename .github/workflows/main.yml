@@ -16,6 +16,7 @@ env:
   JAVA_VERSION: "17"
   APP_NAME: stripe-payment
   ARTIFACT_NAME: stripe-payment-${{ github.sha }}.jar
+  PROJECT_DIR: "stripe-payment-main "
 
 jobs:
   ci:
@@ -34,6 +35,7 @@ jobs:
           cache: maven
 
       - name: Run tests
+        working-directory: ${{ env.PROJECT_DIR }}
         run: mvn -B clean test
 
   deploy:
@@ -41,10 +43,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: ci
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    defaults:
-      run:
-        working-directory: stripe-payment-main
-
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -57,10 +55,11 @@ jobs:
           cache: maven
 
       - name: Build application jar
+        working-directory: ${{ env.PROJECT_DIR }}
         run: mvn -B clean package -DskipTests
 
       - name: Prepare artifact
-        run: cp target/*.jar "${ARTIFACT_NAME}"
+        run: cp "${{ env.PROJECT_DIR }}/target/"*.jar "${ARTIFACT_NAME}"
 
       - name: Copy jar to EC2
         uses: appleboy/scp-action@v0.1.7
@@ -68,7 +67,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: "stripe-payment-main/${{ env.ARTIFACT_NAME }},stripe-payment-main/deploy/deploy.sh"
+          source: "${{ env.PROJECT_DIR }}/${{ env.ARTIFACT_NAME }},${{ env.PROJECT_DIR }}/deploy/deploy.sh"
           target: "/home/${{ secrets.EC2_USER }}/deployments/${{ env.APP_NAME }}"
           strip_components: 0
 
