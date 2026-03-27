@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Studio | Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,600,0,0" rel="stylesheet">
+    <link rel="stylesheet" href="/css/storefront.css">
+</head>
+<body data-page="profile">
+<div class="page-shell">
+    <header class="topbar">
+        <a class="brand" href="/">
+            <div class="brand-mark">CS</div>
+            <div class="brand-copy">
+                <strong>Checkout Studio</strong>
+                <span>Spring Boot payment showcase</span>
+            </div>
+        </a>
+        <nav class="nav-links">
+            <a class="nav-link" href="/"><span class="material-symbols-outlined">home</span>Home</a>
+            <a class="nav-link" href="/products"><span class="material-symbols-outlined">storefront</span>Products</a>
+            <a class="nav-link" href="/cart"><span class="material-symbols-outlined">shopping_cart</span>Cart <span class="nav-badge" data-cart-count>0</span></a>
+            <a class="nav-link active" href="/profile"><span class="material-symbols-outlined">person</span>Profile</a>
+            <a class="nav-link" href="/" data-guest-only><span class="material-symbols-outlined">login</span>Login</a>
+            <a class="nav-link logout" href="/logout-page" data-auth-only data-logout-link><span class="material-symbols-outlined">logout</span>Logout</a>
+        </nav>
+    </header>
+
+    <main class="profile-grid" style="grid-template-columns: 0.95fr 1.05fr;">
+        <section id="profile-root"></section>
+
+        <section id="orders-section" class="panel">
+            <div class="section-head">
+                <div>
+                    <h3>My Orders</h3>
+                    <p class="section-subtitle">Review recent purchases, payment status, and refund-safe cancellations.</p>
+                </div>
+            </div>
+            <div id="orders-feedback" class="feedback"></div>
+            <div id="orders-list" class="orders-list"></div>
+        </section>
+    </main>
+
+    <section class="panel" style="margin-top: 22px;">
+        <div class="section-head">
+            <div>
+                <h3>Event Audit</h3>
+                <p class="section-subtitle">Recent Kafka-consumed order and payment events for demo visibility.</p>
+            </div>
+        </div>
+        <div id="events-feedback" class="feedback"></div>
+        <div id="events-list" class="events-list"></div>
+    </section>
+</div>
+<script src="/js/storefront.js"></script>
+</body>
+</html>

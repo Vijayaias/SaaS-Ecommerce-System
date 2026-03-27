@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Studio | Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,600,0,0" rel="stylesheet">
+    <link rel="stylesheet" href="/css/storefront.css">
+</head>
+<body data-page="home">
+<div class="page-shell">
+    <header class="topbar">
+        <a class="brand" href="/">
+            <div class="brand-mark">CS</div>
+            <div class="brand-copy">
+                <strong>Checkout Studio</strong>
+                <span>Spring Boot payment showcase</span>
+            </div>
+        </a>
+        <nav class="nav-links">
+            <a class="nav-link active" href="/"><span class="material-symbols-outlined">home</span>Home</a>
+            <a class="nav-link" href="/products"><span class="material-symbols-outlined">storefront</span>Products</a>
+            <a class="nav-link" href="/cart"><span class="material-symbols-outlined">shopping_cart</span>Cart <span class="nav-badge" data-cart-count>0</span></a>
+            <a class="nav-link" href="/profile"><span class="material-symbols-outlined">person</span>Profile</a>
+            <a class="nav-link" href="/" data-guest-only><span class="material-symbols-outlined">login</span>Login</a>
+            <a class="nav-link logout" href="/logout-page" data-auth-only data-logout-link><span class="material-symbols-outlined">logout</span>Logout</a>
+        </nav>
+    </header>
+
+    <main class="grid-two">
+        <section class="hero-card">
+            <span class="eyebrow">Stateless Commerce Demo</span>
+            <h1 class="hero-title">One storefront. Multiple pages. Full payment flow.</h1>
+            <p class="hero-copy">
+                Explore a resume-ready Spring Boot demo with JWT login, cart checkout, Stripe payment confirmation,
+                webhook-aware order updates, refund handling, and a cleaner multi-page browsing experience.
+            </p>
+            <div class="metric-row">
+                <article class="metric">
+                    <strong>JWT Auth</strong>
+                    <span>Stateless login across pages</span>
+                </article>
+                <article class="metric">
+                    <strong>Stripe Ready</strong>
+                    <span>Checkout, return, and refund support</span>
+                </article>
+                <article class="metric">
+                    <strong>Orders + Profile</strong>
+                    <span>Track payments and cancel safely</span>
+                </article>
+            </div>
+            <div class="quick-link-grid" style="margin-top: 20px;">
+                <a class="quick-link" href="/products">
+                    <strong>Browse Products</strong>
+                    <span>Start building a cart with gadget products.</span>
+                </a>
+                <a class="quick-link" href="/cart">
+                    <strong>Open Cart</strong>
+                    <span>Review totals and launch checkout from one place.</span>
+                </a>
+                <a class="quick-link" href="/profile">
+                    <strong>Visit Profile</strong>
+                    <span>Check user info, order statuses, and refunds.</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="auth-card" class="auth-card">
+            <h2 id="auth-title">Login to Continue</h2>
+            <p class="section-subtitle">Authenticate once, then move between Products, Cart, and Profile from the menu above.</p>
+            <div id="auth-feedback" class="feedback"></div>
+            <div class="input-shell">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="form-control" placeholder="Enter your username">
+            </div>
+            <div class="input-shell">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" placeholder="Enter your password">
+            </div>
+            <div id="signup-extra" style="display:none;">
+                <div class="input-shell">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email">
+                </div>
+            </div>
+            <button id="login-btn" class="btn btn-success full-width">Login</button>
+            <button id="signup-btn" class="btn btn-secondary full-width" style="display:none; margin-top: 10px;">Create Account</button>
+            <button id="toggle-auth" class="btn btn-link">Don't have an account? Sign Up</button>
+        </section>
+
+        <section id="welcome-card" class="success-card" style="display:none;">
+            <div class="icon-hero">
+                <span class="material-symbols-outlined">verified_user</span>
+            </div>
+            <h1>Welcome back</h1>
+            <p class="hero-copy" style="margin: 0 auto 24px; text-align: center;">
+                Your session is active. Use the menu to add items, check out through Stripe, and manage orders from your profile page.
+            </p>
+            <div class="cta-row">
+                <a class="btn btn-primary" href="/products">Go To Products</a>
+                <a class="btn btn-secondary" href="/profile">Go To Profile</a>
+            </div>
+        </section>
+    </main>
+</div>
+<script src="/js/storefront.js"></script>
+</body>
+</html>
