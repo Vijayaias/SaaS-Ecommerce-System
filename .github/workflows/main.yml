@@ -67,7 +67,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: "${{ env.PROJECT_DIR }}/${{ env.ARTIFACT_NAME }},${{ env.PROJECT_DIR }}/deploy/deploy.sh"
+          source: "${{ env.ARTIFACT_NAME }},${{ env.PROJECT_DIR }}/deploy/deploy.sh"
           target: "/home/${{ secrets.EC2_USER }}/deployments/${{ env.APP_NAME }}"
           strip_components: 1
 
