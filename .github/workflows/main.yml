@@ -1,0 +1,86 @@
+name: CI-CD to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+      - feature/**
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: "17"
+  APP_NAME: stripe-payment
+  ARTIFACT_NAME: stripe-payment-${{ github.sha }}.jar
+
+jobs:
+  ci:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+
+      - name: Run tests
+        run: mvn -B clean test
+
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+
+      - name: Build application jar
+        run: mvn -B clean package -DskipTests
+
+      - name: Prepare artifact
+        run: cp target/*.jar "${ARTIFACT_NAME}"
+
+      - name: Copy jar to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          source: "${{ env.ARTIFACT_NAME }},deploy/deploy.sh"
+          target: "/home/${{ secrets.EC2_USER }}/deployments/${{ env.APP_NAME }}"
+          strip_components: 0
+
+      - name: Run remote deployment
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            chmod +x /home/${{ secrets.EC2_USER }}/deployments/${{ env.APP_NAME }}/deploy/deploy.sh
+            APP_NAME=${{ env.APP_NAME }} \
+            APP_JAR=${{ env.ARTIFACT_NAME }} \
+            APP_PORT=${{ vars.APP_PORT }} \
+            APP_DIR=/opt/${{ env.APP_NAME }} \
+            DEPLOY_DIR=/home/${{ secrets.EC2_USER }}/deployments/${{ env.APP_NAME }} \
+            /home/${{ secrets.EC2_USER }}/deployments/${{ env.APP_NAME }}/deploy/deploy.sh
