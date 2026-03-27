@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Studio | Cart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,600,0,0" rel="stylesheet">
+    <link rel="stylesheet" href="/css/storefront.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body data-page="cart">
+<div class="page-shell">
+    <header class="topbar">
+        <a class="brand" href="/">
+            <div class="brand-mark">CS</div>
+            <div class="brand-copy">
+                <strong>Checkout Studio</strong>
+                <span>Spring Boot payment showcase</span>
+            </div>
+        </a>
+        <nav class="nav-links">
+            <a class="nav-link" href="/"><span class="material-symbols-outlined">home</span>Home</a>
+            <a class="nav-link" href="/products"><span class="material-symbols-outlined">storefront</span>Products</a>
+            <a class="nav-link active" href="/cart"><span class="material-symbols-outlined">shopping_cart</span>Cart <span class="nav-badge" data-cart-count>0</span></a>
+            <a class="nav-link" href="/profile"><span class="material-symbols-outlined">person</span>Profile</a>
+            <a class="nav-link" href="/" data-guest-only><span class="material-symbols-outlined">login</span>Login</a>
+            <a class="nav-link logout" href="/logout-page" data-auth-only data-logout-link><span class="material-symbols-outlined">logout</span>Logout</a>
+        </nav>
+    </header>
+
+    <main class="grid-two">
+        <section class="panel">
+            <div class="section-head">
+                <div>
+                    <h2>Your Cart</h2>
+                    <p class="section-subtitle">This page is now the single place where checkout starts.</p>
+                </div>
+            </div>
+            <div id="cart-feedback" class="feedback"></div>
+            <div id="cart-items" class="cart-items"></div>
+        </section>
+
+        <aside class="panel">
+            <div class="section-head">
+                <div>
+                    <h3>Checkout Summary</h3>
+                    <p class="section-subtitle">Review your totals before Stripe opens.</p>
+                </div>
+            </div>
+            <div class="cart-summary-grid">
+                <article class="status-card">
+                    <strong id="cart-item-count">0 items</strong>
+                    <span>Across your saved cart</span>
+                </article>
+                <article class="status-card">
+                    <strong id="cart-total">$0.00</strong>
+                    <span>Total ready for checkout</span>
+                </article>
+            </div>
+            <div style="margin-top: 18px;">
+                <button id="cart-checkout-btn" class="btn btn-primary full-width" type="button">Checkout Cart</button>
+            </div>
+            <div style="margin-top: 12px;">
+                <a class="btn btn-secondary full-width" href="/products">Add More Products</a>
+            </div>
+        </aside>
+    </main>
+</div>
+<script src="/js/storefront.js"></script>
+</body>
+</html>

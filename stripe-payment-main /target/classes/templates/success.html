@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            font-family: "Manrope", sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(31, 122, 85, 0.18), transparent 30%),
+                linear-gradient(180deg, #f6fbf8 0%, #edf7f2 100%);
+            color: #153728;
+        }
+
+        .card {
+            width: min(560px, calc(100vw - 32px));
+            padding: 36px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(21, 55, 40, 0.1);
+            box-shadow: 0 24px 60px rgba(31, 122, 85, 0.14);
+            text-align: center;
+        }
+
+        .badge {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #1f7a55 0%, #32a36f 100%);
+            color: #fff;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(2rem, 5vw, 2.8rem);
+        }
+
+        p {
+            margin: 0 0 24px;
+            color: #4a6c5a;
+            line-height: 1.7;
+        }
+
+        a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 170px;
+            padding: 14px 18px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 800;
+            color: #fff;
+            background: linear-gradient(135deg, #1f7a55 0%, #32a36f 100%);
+        }
+
+        .secondary-link {
+            display: inline-flex;
+            justify-content: center;
+            margin-top: 14px;
+            min-width: 170px;
+            padding: 14px 18px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 800;
+            color: #153728;
+            background: rgba(31, 122, 85, 0.1);
+        }
+
+        .redirect-note {
+            margin-top: 18px;
+            font-size: 0.92rem;
+        }
+    </style>
+</head>
+<body>
+<section class="card">
+    <div class="badge">✓</div>
+    <h1>Payment Successful</h1>
+    <p>Your checkout was completed successfully. We will take you back to your orders so you can review or cancel the order if needed.</p>
+    <a id="orders-link" href="/profile#orders-section">Go To My Orders</a>
+    <a class="secondary-link" href="/products">Back To Products</a>
+    <p class="redirect-note">Redirecting to your orders in 4 seconds...</p>
+</section>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get("session_id");
+    const ordersUrl = sessionId ? `/profile?session_id=${encodeURIComponent(sessionId)}#orders-section` : "/profile#orders-section";
+    document.getElementById("orders-link").href = ordersUrl;
+
+    setTimeout(() => {
+        window.location.href = ordersUrl;
+    }, 4000);
+</script>
+</body>
+</html>
