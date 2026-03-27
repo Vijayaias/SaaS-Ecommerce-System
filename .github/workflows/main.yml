@@ -59,7 +59,10 @@ jobs:
         run: mvn -B clean package -DskipTests
 
       - name: Prepare artifact
-        run: cp "${{ env.PROJECT_DIR }}/target/"*.jar "${ARTIFACT_NAME}"
+        run: |
+          mkdir -p bundle/deploy
+          cp "${{ env.PROJECT_DIR }}/target/"*.jar "bundle/${ARTIFACT_NAME}"
+          cp "${{ env.PROJECT_DIR }}/deploy/deploy.sh" "bundle/deploy/deploy.sh"
 
       - name: Copy jar to EC2
         uses: appleboy/scp-action@v0.1.7
@@ -67,7 +70,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: "${{ env.ARTIFACT_NAME }},${{ env.PROJECT_DIR }}/deploy/deploy.sh"
+          source: "bundle/${{ env.ARTIFACT_NAME }},bundle/deploy/deploy.sh"
           target: "/home/${{ secrets.EC2_USER }}/deployments/${{ env.APP_NAME }}"
           strip_components: 1
 
