@@ -100,6 +100,20 @@
         return `$${(cents / 100).toFixed(2)}`;
     }
 
+    function createClientRequestId() {
+        if (window.crypto && typeof window.crypto.randomUUID === "function") {
+            return window.crypto.randomUUID();
+        }
+
+        if (window.crypto && typeof window.crypto.getRandomValues === "function") {
+            const bytes = new Uint8Array(16);
+            window.crypto.getRandomValues(bytes);
+            return Array.from(bytes, byte => byte.toString(16).padStart(2, "0")).join("");
+        }
+
+        return `fallback-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
     function setFeedback(element, message, type) {
         if (!element) {
             return;
@@ -396,7 +410,7 @@
             body: JSON.stringify({
                 orderId: order.id,
                 provider: "STRIPE",
-                idempotencyKey: crypto.randomUUID()
+                idempotencyKey: createClientRequestId()
             })
         });
     }
