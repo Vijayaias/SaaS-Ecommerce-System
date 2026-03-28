@@ -33,17 +33,20 @@ public class PaymentService {
     private final StripeService stripeService;
     private final RedisStateService redisStateService;
     private final PaymentEventPublisher paymentEventPublisher;
+    private final EmailNotificationService emailNotificationService;
 
     public PaymentService(PaymentRepository paymentRepository,
                           OrderService orderService,
                           StripeService stripeService,
                           RedisStateService redisStateService,
-                          PaymentEventPublisher paymentEventPublisher) {
+                          PaymentEventPublisher paymentEventPublisher,
+                          EmailNotificationService emailNotificationService) {
         this.paymentRepository = paymentRepository;
         this.orderService = orderService;
         this.stripeService = stripeService;
         this.redisStateService = redisStateService;
         this.paymentEventPublisher = paymentEventPublisher;
+        this.emailNotificationService = emailNotificationService;
     }
 
     @Transactional
@@ -117,6 +120,7 @@ public class PaymentService {
         PaymentEntity saved = paymentRepository.save(payment);
         orderService.markPaymentSucceeded(order);
         paymentEventPublisher.publishPaymentEvent("PAYMENT_CONFIRMED_FROM_RETURN", saved);
+        emailNotificationService.sendPaymentNotification("PAYMENT_CONFIRMED_FROM_RETURN", saved.getOrderId());
         return new ApiMessageResponse("Payment confirmed successfully");
     }
 
@@ -153,6 +157,7 @@ public class PaymentService {
         PaymentEntity saved = paymentRepository.save(payment);
         orderService.markCancelled(order);
         paymentEventPublisher.publishPaymentEvent("PAYMENT_REFUNDED", saved);
+        emailNotificationService.sendPaymentNotification("PAYMENT_REFUNDED", saved.getOrderId());
         } finally {
             redisStateService.releaseCancelLock(orderId);
         }
@@ -314,6 +319,7 @@ public class PaymentService {
         PaymentEntity saved = paymentRepository.save(payment);
         orderService.markPaymentSucceeded(order);
         paymentEventPublisher.publishPaymentEvent("PAYMENT_SUCCEEDED", saved);
+        emailNotificationService.sendPaymentNotification("PAYMENT_SUCCEEDED", saved.getOrderId());
     }
 
     private void markWebhookPaymentFailed(String eventId, PaymentEntity payment, String failureReason) {
@@ -345,5 +351,6 @@ public class PaymentService {
         PaymentEntity saved = paymentRepository.save(payment);
         orderService.markCancelled(order);
         paymentEventPublisher.publishPaymentEvent("PAYMENT_REFUNDED_FROM_WEBHOOK", saved);
+        emailNotificationService.sendPaymentNotification("PAYMENT_REFUNDED_FROM_WEBHOOK", saved.getOrderId());
     }
 }

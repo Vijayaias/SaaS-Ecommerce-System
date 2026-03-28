@@ -81,6 +81,36 @@ public class EmailNotificationService {
         }
     }
 
+    public void sendPaymentNotification(String eventType, Long orderId) {
+        if (!mailEnabled || orderId == null || orderId <= 0) {
+            return;
+        }
+
+        try {
+            if (!isNotificationEvent(eventType) || !redisStateService.tryAcquireNotificationLock(eventType, orderId)) {
+                return;
+            }
+
+            OrderEntity order = orderRepository.findById(orderId).orElse(null);
+            if (order == null) {
+                return;
+            }
+
+            UserEntity user = userRepository.findById(order.getUserId()).orElse(null);
+            if (user == null || user.getEmail() == null || user.getEmail().isBlank()) {
+                return;
+            }
+
+            if (isReceiptEvent(eventType)) {
+                sendReceiptEmail(user, order, eventType);
+            } else if (isRefundEvent(eventType)) {
+                sendRefundEmail(user, order, eventType);
+            }
+        } catch (Exception ex) {
+            eventAuditService.record("mail-error", ex.getMessage());
+        }
+    }
+
     private boolean isNotificationEvent(String eventType) {
         return isReceiptEvent(eventType) || isRefundEvent(eventType);
     }
